@@ -137,13 +137,13 @@ WHERE
 
 
 SELECT 
-	UNNEST(STRING_TO_ARRAY(casts, ',')) as actor,
-	COUNT(*)
+    UNNEST(STRING_TO_ARRAY(casts, ',')) AS actors,
+    COUNT(*) as total_content
 FROM netflix
-WHERE country = 'India'
-GROUP BY 1
-ORDER BY 2 DESC
-LIMIT 10
+WHERE country ilike '%India%'
+GROUP BY actors
+ORDER BY COUNT(*) DESC
+LIMIT 10;
 
 /*
 Question 15:
