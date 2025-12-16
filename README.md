@@ -65,7 +65,7 @@ FROM
         type,
         rating,
         COUNT(*),
-        RANK() OVER (PARTITION BY type ORDER BY rating_count DESC) AS ranking
+        RANK() OVER (PARTITION BY type ORDER BY COUNT(*) DESC) as ranking
     FROM netflix
     GROUP BY type, rating
 ) as t1
