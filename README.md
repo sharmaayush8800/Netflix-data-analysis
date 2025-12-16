@@ -56,27 +56,20 @@ GROUP BY 1;
 ### 2. Find the Most Common Rating for Movies and TV Shows
 
 ```sql
-WITH RatingCounts AS (
+SELECT
+    type,
+    rating
+FROM
+(
     SELECT 
         type,
         rating,
-        COUNT(*) AS rating_count
+        COUNT(*),
+        RANK() OVER (PARTITION BY type ORDER BY rating_count DESC) AS ranking
     FROM netflix
     GROUP BY type, rating
-),
-RankedRatings AS (
-    SELECT 
-        type,
-        rating,
-        rating_count,
-        RANK() OVER (PARTITION BY type ORDER BY rating_count DESC) AS rank
-    FROM RatingCounts
-)
-SELECT 
-    type,
-    rating AS most_frequent_rating
-FROM RankedRatings
-WHERE rank = 1;
+) as t1
+WHERE ranking = 1;
 ```
 
 **Objective:** Identify the most frequently occurring rating for each type of content.
@@ -135,14 +128,8 @@ WHERE TO_DATE(date_added, 'Month DD, YYYY') >= CURRENT_DATE - INTERVAL '5 years'
 ### 7. Find All Movies/TV Shows by Director 'Rajiv Chilaka'
 
 ```sql
-SELECT *
-FROM (
-    SELECT 
-        *,
-        UNNEST(STRING_TO_ARRAY(director, ',')) AS director_name
-    FROM netflix
-) AS t
-WHERE director_name = 'Rajiv Chilaka';
+SELECT * from netflix
+WHERE director LIKE '%Rajiv Chilaka%';
 ```
 
 **Objective:** List all content directed by 'Rajiv Chilaka'.
@@ -163,15 +150,15 @@ WHERE type = 'TV Show'
 ```sql
 SELECT 
     UNNEST(STRING_TO_ARRAY(listed_in, ',')) AS genre,
-    COUNT(*) AS total_content
+    COUNT(show_id) AS total_content
 FROM netflix
 GROUP BY 1;
 ```
 
 **Objective:** Count the number of content items in each genre.
 
-### 10.Find each year and the average numbers of content release in India on netflix. 
-return top 5 year with highest avg content release!
+### 10.Find each year and the average numbers of content release in India on netflix, 
+**return top 5 year with highest avg content release!**
 
 ```sql
 SELECT 
