@@ -10,27 +10,20 @@ GROUP BY 1
 
 -- 2. Find the most common rating for movies and TV shows
 
-WITH RatingCounts AS (
+	SELECT
+    type,
+    rating
+FROM
+(
     SELECT 
         type,
         rating,
-        COUNT(*) AS rating_count
+        COUNT(*),
+        RANK() OVER (PARTITION BY type ORDER BY COUNT(*) DESC) as ranking
     FROM netflix
     GROUP BY type, rating
-),
-RankedRatings AS (
-    SELECT 
-        type,
-        rating,
-        rating_count,
-        RANK() OVER (PARTITION BY type ORDER BY rating_count DESC) AS rank
-    FROM RatingCounts
-)
-SELECT 
-    type,
-    rating AS most_frequent_rating
-FROM RankedRatings
-WHERE rank = 1;
+) as t1
+WHERE ranking = 1;
 
 
 -- 3. List all movies released in a specific year (e.g., 2020)
