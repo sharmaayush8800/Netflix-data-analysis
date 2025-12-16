@@ -213,11 +213,11 @@ WHERE casts LIKE '%Salman Khan%'
 
 ```sql
 SELECT 
-    UNNEST(STRING_TO_ARRAY(casts, ',')) AS actor,
-    COUNT(*)
+    UNNEST(STRING_TO_ARRAY(casts, ',')) AS actors,
+    COUNT(*) as total_content
 FROM netflix
-WHERE country = 'India'
-GROUP BY actor
+WHERE country ilike '%India%'
+GROUP BY actors
 ORDER BY COUNT(*) DESC
 LIMIT 10;
 ```
