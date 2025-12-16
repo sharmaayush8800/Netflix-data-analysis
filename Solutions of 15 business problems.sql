@@ -75,19 +75,8 @@ WHERE TO_DATE(date_added, 'Month DD, YYYY') >= CURRENT_DATE - INTERVAL '5 years'
 
 -- 7. Find all the movies/TV shows by director 'Rajiv Chilaka'!
 
-SELECT *
-FROM
-(
-
-SELECT 
-	*,
-	UNNEST(STRING_TO_ARRAY(director, ',')) as director_name
-FROM 
-netflix
-)
-WHERE 
-	director_name = 'Rajiv Chilaka'
-
+SELECT * from netflix
+WHERE director LIKE '%Rajiv Chilaka%';
 
 
 -- 8. List all TV shows with more than 5 seasons
